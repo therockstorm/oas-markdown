@@ -1,6 +1,6 @@
 {{= data.tags.section }}
 
-## Request Parameters
+###### Body Params
 
 |Name|Type|Required|Description|
 |---|---|---|---|
