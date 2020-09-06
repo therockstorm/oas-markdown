@@ -1,0 +1,29 @@
+{{= data.tags.section }}
+# {{= data.operationUniqueName}}
+
+{{ data.methodUpper = data.method.verb.toUpperCase(); }}
+{{ data.url = data.utils.slashes(data.baseUrl + data.method.path); }}
+{{ data.parameters = data.operation.parameters; }}
+{{ data.enums = []; }}
+{{ data.utils.fakeProdCons(data); }}
+{{ data.utils.fakeBodyParameter(data); }}
+{{ data.utils.mergePathParameters(data); }}
+{{ data.utils.getParameters(data); }}
+
+{{? data.operation.description}}{{= data.operation.description }}{{?}}
+
+{{? data.parameters && data.parameters.length }}
+{{#def.parameters}}
+{{?}}
+
+{{#def.responses}}
+
+{{#def.callbacks}}
+
+{{ data.security = data.operation.security ? data.operation.security : data.api.security; }}
+{{? data.security && data.security.length }}
+{{#def.authentication}}
+{{??}}
+{{#def.authentication_none}}
+{{?}}
+{{= data.tags.endSection }}

@@ -1,0 +1,10 @@
+{{= data.tags.section }}
+
+## Request Parameters
+
+|Name|Type|Required|Description|
+|---|---|---|---|
+{{~ data.parameters :p}}|{{=p.name}}|{{=p.safeType}}|{{=p.required}}|{{=p.shortDesc || ''}}|
+{{~}}
+
+{{= data.tags.endSection }}
