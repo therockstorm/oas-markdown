@@ -151,7 +151,7 @@ async function doit(s) {
 
   try {
     fs.writeFileSync("tmp.yml", safeDump(api, { sortKeys: true }), "utf8");
-    const sortedApi = safeLoad(readFileSync("tmp.yml", "utf8"));
+    const sortedApi = safeLoad(fs.readFileSync("tmp.yml", "utf8"));
 
     const initOpToDescMap = async () => {
       const output = await converter.convert(sortedApi, options);
