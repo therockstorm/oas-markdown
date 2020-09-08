@@ -9,7 +9,7 @@ const yaml = require("yaml")
 const fetch = require("node-fetch")
 
 const converter = require("./lib/index.js")
-const { safeDump } = require("js-yaml")
+  const { safeDump, safeLoad } = require("js-yaml");
 
 var argv = require("yargs")
   .usage("oas-markdown [options] {input-file|url} [[-o] output markdown]")
@@ -150,8 +150,11 @@ async function doit(s) {
   }
 
   try {
+    fs.writeFileSync("tmp.yml", safeDump(api, { sortKeys: true }), "utf8");
+    const sortedApi = safeLoad(readFileSync("tmp.yml", "utf8"));
+
     const initOpToDescMap = async () => {
-      const output = await converter.convert(api, options);
+      const output = await converter.convert(sortedApi, options);
       const opToDesc = new Map();
       let op, desc;
       for (const line of output.split("\n")) {
@@ -167,10 +170,10 @@ async function doit(s) {
     };
 
     const opToDesc = await initOpToDescMap();
-    Object.keys(api.paths).forEach((p) => {
-      if (api.paths[p]) {
-        Object.keys(api.paths[p]).forEach((m) => {
-          const method = api.paths[p][m];
+    Object.keys(sortedApi.paths).forEach((p) => {
+      if (sortedApi.paths[p]) {
+        Object.keys(sortedApi.paths[p]).forEach((m) => {
+          const method = sortedApi.paths[p][m];
           if (!opToDesc.has(method.operationId)) {
             console.error("Missing operationId", method.operationId);
             process.exit(1);
@@ -182,7 +185,7 @@ async function doit(s) {
 
     fs.writeFileSync(
       path.resolve(argv.outfile || argv._[1]),
-      safeDump(api),
+      safeDump(sortedApi),
       "utf8"
     );
   } catch (err) {
